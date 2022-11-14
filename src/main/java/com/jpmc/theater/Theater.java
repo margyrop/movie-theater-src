@@ -1,10 +1,15 @@
 package com.jpmc.theater;
 
+import com.google.gson.Gson;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static com.jpmc.theater.Constants.MovieCode.REGULAR;
+import static com.jpmc.theater.Constants.MovieCode.SPECIAL;
 
 public class Theater {
 
@@ -14,9 +19,9 @@ public class Theater {
     public Theater(LocalDateProvider provider) {
         this.provider = provider;
 
-        Movie spiderMan = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(90), 12.5, 1);
-        Movie turningRed = new Movie("Turning Red", Duration.ofMinutes(85), 11, 0);
-        Movie theBatMan = new Movie("The Batman", Duration.ofMinutes(95), 9, 0);
+        Movie spiderMan = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(90), 12.5, SPECIAL);
+        Movie turningRed = new Movie("Turning Red", Duration.ofMinutes(85), 11, REGULAR);
+        Movie theBatMan = new Movie("The Batman", Duration.ofMinutes(95), 9, REGULAR);
         schedule = List.of(
             new Showing(turningRed, 1, LocalDateTime.of(provider.currentDate(), LocalTime.of(9, 0))),
             new Showing(spiderMan, 2, LocalDateTime.of(provider.currentDate(), LocalTime.of(11, 0))),
@@ -41,11 +46,16 @@ public class Theater {
         return new Reservation(customer, showing, howManyTickets);
     }
 
+    // We want to print the movie schedule with simple text & json format
+    public void printScheduleJson() {
+        System.out.println(new Gson().toJson(schedule));
+    }
+
     public void printSchedule() {
         System.out.println(provider.currentDate());
         System.out.println("===================================================");
         schedule.forEach(s ->
-                System.out.println(s.getSequenceOfTheDay() + ": " + s.getStartTime() + " " + s.getMovie().getTitle() + " " + humanReadableFormat(s.getMovie().getRunningTime()) + " $" + s.getMovieFee())
+                System.out.println(s.getSequenceOfTheDay() + ": " + s.getStartTime() + " " + s.getMovie().getTitle() + " " + humanReadableFormat(s.getMovie().getRunningTime()) + " $" + s.calculateTicketPrice())
         );
         System.out.println("===================================================");
     }
@@ -70,5 +80,6 @@ public class Theater {
     public static void main(String[] args) {
         Theater theater = new Theater(LocalDateProvider.singleton());
         theater.printSchedule();
+        theater.printScheduleJson();
     }
 }

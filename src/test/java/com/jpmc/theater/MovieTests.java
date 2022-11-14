@@ -3,19 +3,44 @@ package com.jpmc.theater;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.jpmc.theater.Constants.MovieCode.REGULAR;
+import static com.jpmc.theater.Constants.MovieCode.SPECIAL;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MovieTests {
     @Test
-    void specialMovieWith50PercentDiscount() {
-        Movie spiderMan = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(90),12.5, 1);
-        Showing showing = new Showing(spiderMan, 5, LocalDateTime.of(LocalDate.now(), LocalTime.now()));
-        assertEquals(10, spiderMan.calculateTicketPrice(showing));
+    void specialMovieEquals() {
+        Movie spiderMan = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(90),12.5, SPECIAL);
+        Movie spiderMan2 = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(90),12.5, SPECIAL);
+        assertTrue(spiderMan.equals(spiderMan2));
 
-        System.out.println(Duration.ofMinutes(90));
+    }
+
+    @Test
+    void specialMovieNotEqualsName() {
+        Movie spiderMan = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(90),12.5, SPECIAL);
+        Movie spiderMan2 = new Movie("Spider-Man: No Way Home 2", Duration.ofMinutes(90),12.5, SPECIAL);
+        assertFalse(spiderMan.equals(spiderMan2));
+    }
+
+    @Test
+    void specialMovieNotEqualsDuration() {
+        Movie spiderMan = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(90),12.5, SPECIAL);
+        Movie spiderMan2 = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(91),12.5, SPECIAL);
+        assertFalse(spiderMan.equals(spiderMan2));
+    }
+    @Test
+    void specialMovieNotEqualsTicketPrice() {
+        Movie spiderMan = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(90),12.5, SPECIAL);
+        Movie spiderMan2 = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(90),13.5, SPECIAL);
+        assertFalse(spiderMan.equals(spiderMan2));
+    }
+    @Test
+    void specialMovieNotEqualsSpecial() {
+        Movie spiderMan = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(90),12.5, SPECIAL);
+        Movie spiderMan2 = new Movie("Spider-Man: No Way Home", Duration.ofMinutes(90),12.5, REGULAR);
+        assertFalse(spiderMan.equals(spiderMan2));
     }
 }

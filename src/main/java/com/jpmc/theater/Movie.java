@@ -1,59 +1,26 @@
 package com.jpmc.theater;
 
+import lombok.Data;
+
 import java.time.Duration;
 import java.util.Objects;
+import com.jpmc.theater.Constants.MovieCode;
 
+@Data
 public class Movie {
-    private static int MOVIE_CODE_SPECIAL = 1;
+
 
     private String title;
     private String description;
     private Duration runningTime;
     private double ticketPrice;
-    private int specialCode;
+    private MovieCode specialCode;
 
-    public Movie(String title, Duration runningTime, double ticketPrice, int specialCode) {
+    public Movie(String title, Duration runningTime, double ticketPrice, MovieCode specialCode) {
         this.title = title;
         this.runningTime = runningTime;
         this.ticketPrice = ticketPrice;
         this.specialCode = specialCode;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Duration getRunningTime() {
-        return runningTime;
-    }
-
-    public double getTicketPrice() {
-        return ticketPrice;
-    }
-
-    public double calculateTicketPrice(Showing showing) {
-        return ticketPrice - getDiscount(showing.getSequenceOfTheDay());
-    }
-
-    private double getDiscount(int showSequence) {
-        double specialDiscount = 0;
-        if (MOVIE_CODE_SPECIAL == specialCode) {
-            specialDiscount = ticketPrice * 0.2;  // 20% discount for special movie
-        }
-
-        double sequenceDiscount = 0;
-        if (showSequence == 1) {
-            sequenceDiscount = 3; // $3 discount for 1st show
-        } else if (showSequence == 2) {
-
-            sequenceDiscount = 2; // $2 discount for 2nd show
-        }
-//        else {
-//            throw new IllegalArgumentException("failed exception");
-//        }
-
-        // biggest discount wins
-        return specialDiscount > sequenceDiscount ? specialDiscount : sequenceDiscount;
     }
 
     @Override
